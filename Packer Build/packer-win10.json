@@ -26,7 +26,6 @@
     "winrm_timeout": "3m",
     "winrm_username": "packer",
 
-    "location": "West 2 US",
     "build_resource_group_name": "CEPS-WVD-Prep",
     "vm_size": "Standard_DS2_v3",
     "virtual_network_name": "CEPS-WVD-Prep-vnet",
