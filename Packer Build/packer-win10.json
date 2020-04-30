@@ -15,9 +15,10 @@
     "managed_image_name": "MyWindowsOSImage",
 
     "os_type": "Windows",
-    "image_publisher": "MicrosoftWindowsServer",
-    "image_offer": "WindowsServer",
-    "image_sku": "2012-R2-Datacenter",
+    "image_publisher": "microsoftwindowsdesktop",
+    "image_offer": "office-365",
+    "image_sku": "19h2-evd-o365pp",
+    "image_version": "latest",
 
     "communicator": "winrm",
     "winrm_use_ssl": "true",
@@ -25,11 +26,17 @@
     "winrm_timeout": "3m",
     "winrm_username": "packer",
 
-    "location": "South Central US",
-    "vm_size": "Standard_DS2_v3"
+    "location": "West 2 US",
+    "build_resource_group_name": "CEPS-WVD-Prep",
+    "vm_size": "Standard_DS2_v3",
+    "virtual_network_name": "CEPS-WVD-Prep-vnet",
+    "virtual_network_subnet_name": "CEPS-Students01"
   }],
   "provisioners": [{
     "type": "powershell",
-      "inline": []
+      "inline": [
+        "& $env:SystemRoot\\System32\\Sysprep\\Sysprep.exe /oobe /generalize /quiet /quit /mode:vm",
+        "while($true) { $imageState = Get-ItemProperty HKLM:\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Setup\\State | Select ImageState; if($imageState.ImageState -ne 'IMAGE_STATE_GENERALIZE_RESEAL_TO_OOBE') { Write-Output $imageState.ImageState; Start-Sleep -s 10  } else { break } }"
+      ]
   }]
 }
